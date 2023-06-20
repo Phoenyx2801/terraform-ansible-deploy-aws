@@ -23,7 +23,7 @@ jobs:
       -
         name: Build, tag and push to AWS ECR
         env:
-          IMAGE_TAG: ${{ vars.GITHUB_REF_TYPE }}
+          IMAGE_TAG: ${GITHUB_REF#refs/tags/}
         run: |
           docker build -t ${{ vars.REGISTRY_NAME}}/${{ vars.REPOSITORY_NAME }}:$IMAGE_TAG .
           docker push ${{ vars.REGISTRY_NAME}}/${{ vars.REPOSITORY_NAME }}:$IMAGE_TAG
