@@ -3,4 +3,24 @@ on:
   push:
     branches:
       - main
-      
+jobs:
+  build-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2 # More information on this action can be found below in the 'AWS Credentials' section
+        with:
+           role-to-assume: arn:aws:iam::677157108340:user/admin_cli
+           aws-region: aws-region-1
+      - name: Login to AWS ECR
+        id: login-ecr
+        used: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag and push to AWS ECR
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t ${{ vars.REGISTRY_NAME}}/${{ vars.REPOSITORY_NAME }}:$IMAGE_TAG .
+          docker push ${{ vars.REGISTRY_NAME}}/${{ vars.REPOSITORY_NAME }}:$IMAGE_TAG
