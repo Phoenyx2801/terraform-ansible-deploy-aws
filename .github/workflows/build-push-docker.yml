@@ -20,12 +20,12 @@ jobs:
         name: Login to AWS ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        run: |
+          aws ecr get-login-password --region eu-central | docker login --username AWS --password-stdin 677157108340.dkr.ecr.eu-central-1.amazonaws.com
       -
         name: Build, tag and push to AWS ECR
-        id: login-ecr
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          aws ecr get-login-password --region eu-central | docker login --username AWS --password-stdin 677157108340.dkr.ecr.eu-central-1.amazonaws.com
           docker build -t ${{ vars.REGISTRY_NAME}}/${{ vars.REPOSITORY_NAME }}:$IMAGE_TAG .
           docker push ${{ vars.REGISTRY_NAME}}/${{ vars.REPOSITORY_NAME }}:$IMAGE_TAG
