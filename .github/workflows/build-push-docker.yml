@@ -13,8 +13,9 @@ jobs:
         name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2 # More information on this action can be found below in the 'AWS Credentials' section
         with:
-           role-to-assume: arn:aws:iam::677157108340:user/admin_cli
-           aws-region: aws-region-1
+           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID}}
+           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+           aws-region: eu-central-1
       -
         name: Login to AWS ECR
         id: login-ecr
@@ -24,5 +25,6 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          aws ecr get-login-password --region eu-central | docker login --username AWS --password-stdin 677157108340.dkr.ecr.eu-central-1.amazonaws.com
           docker build -t ${{ vars.REGISTRY_NAME}}/${{ vars.REPOSITORY_NAME }}:$IMAGE_TAG .
           docker push ${{ vars.REGISTRY_NAME}}/${{ vars.REPOSITORY_NAME }}:$IMAGE_TAG
