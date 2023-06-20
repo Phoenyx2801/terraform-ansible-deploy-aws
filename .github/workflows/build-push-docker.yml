@@ -1,7 +1,7 @@
 name: build-push-dockerimage
 on:
   push:
-    branches:
+    tags:
       - main
 jobs:
   build-push-image:
@@ -23,7 +23,7 @@ jobs:
       -
         name: Build, tag and push to AWS ECR
         env:
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: $GITHUB_REF_TYPE
         run: |
           docker build -t ${{ vars.REGISTRY_NAME}}/${{ vars.REPOSITORY_NAME }}:$IMAGE_TAG .
           docker push ${{ vars.REGISTRY_NAME}}/${{ vars.REPOSITORY_NAME }}:$IMAGE_TAG
