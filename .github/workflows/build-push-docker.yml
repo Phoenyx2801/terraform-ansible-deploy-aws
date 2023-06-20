@@ -1,0 +1,6 @@
+name: build-push-dockerimage
+on:
+  push:
+    branches:
+      - main
+      
